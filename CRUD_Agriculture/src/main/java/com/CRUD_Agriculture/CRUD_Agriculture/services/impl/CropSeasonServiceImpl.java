@@ -1,6 +1,7 @@
 package com.CRUD_Agriculture.CRUD_Agriculture.services.impl;
 
 import com.CRUD_Agriculture.CRUD_Agriculture.entity.CropSeason;
+import com.CRUD_Agriculture.CRUD_Agriculture.mapper.CropSeasonMapper;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.request.CropSeasonRequest;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.response.CropSeasonResponse;
 import com.CRUD_Agriculture.CRUD_Agriculture.repository.CropSeasonRepository;
@@ -21,43 +22,41 @@ import java.util.List;
 public class CropSeasonServiceImpl implements CropSeasonService {
 
     private final CropSeasonRepository cropSeasonRepository;
+    private final CropSeasonMapper cropSeasonMapper;
 
     // Constructor thủ công
-    public CropSeasonServiceImpl(CropSeasonRepository cropSeasonRepository) {
+    public CropSeasonServiceImpl(CropSeasonRepository cropSeasonRepository, CropSeasonMapper cropSeasonMapper) {
         this.cropSeasonRepository = cropSeasonRepository;
+        this.cropSeasonMapper = cropSeasonMapper;
     }
 
     @Override
     public List<CropSeasonResponse> getAllSeasons() {
         List<CropSeason> seasons = cropSeasonRepository.findAll();
-        List<CropSeasonResponse> responses = new ArrayList<>();
-        for (CropSeason season : seasons) {
-            responses.add(convertToResponse(season));
-        }
-
-        return responses;
+        return seasons.stream()
+                .map(cropSeasonMapper::toResponse)
+                .toList();
     }
 
     @Override
     public CropSeasonResponse getSeasonById(Long id) {
         CropSeason season = findSeasonById(id);
-        return convertToResponse(season);
+        return cropSeasonMapper.toResponse(season);
     }
 
     @Override
     public CropSeasonResponse createSeason(CropSeasonRequest request) {
-        CropSeason season = new CropSeason();
-        BeanUtils.copyProperties(request, season);
+        CropSeason season = cropSeasonMapper.toEntity(request);
         CropSeason savedSeason = cropSeasonRepository.save(season);
-        return convertToResponse(savedSeason);
+        return cropSeasonMapper.toResponse(savedSeason);
     }
 
     @Override
     public CropSeasonResponse updateSeason(Long id, CropSeasonRequest request) {
         CropSeason existingSeason = findSeasonById(id);
-        BeanUtils.copyProperties(request, existingSeason);
+        cropSeasonMapper.toEntity(request); // Không tạo thực thể mới mà cập nhật các trường
         CropSeason updatedSeason = cropSeasonRepository.save(existingSeason);
-        return convertToResponse(updatedSeason);
+        return cropSeasonMapper.toResponse(updatedSeason);
     }
 
     @Override
