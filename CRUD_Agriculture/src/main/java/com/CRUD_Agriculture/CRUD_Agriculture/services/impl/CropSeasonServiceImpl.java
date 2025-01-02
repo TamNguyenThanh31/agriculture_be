@@ -8,21 +8,23 @@ import com.CRUD_Agriculture.CRUD_Agriculture.repository.CropSeasonRepository;
 import com.CRUD_Agriculture.CRUD_Agriculture.services.CropSeasonService;
 import com.CRUD_Agriculture.CRUD_Agriculture.exception.ResourceNotFoundException;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 //@RequiredArgsConstructor
-@Transactional
 public class CropSeasonServiceImpl implements CropSeasonService {
 
     private final CropSeasonRepository cropSeasonRepository;
     private final CropSeasonMapper cropSeasonMapper;
+    private static final Logger logger = LoggerFactory.getLogger(CropSeasonServiceImpl.class);
 
     // Constructor thủ công
     public CropSeasonServiceImpl(CropSeasonRepository cropSeasonRepository, CropSeasonMapper cropSeasonMapper) {
@@ -45,17 +47,44 @@ public class CropSeasonServiceImpl implements CropSeasonService {
     }
 
     @Override
+    @Transactional
     public CropSeasonResponse createSeason(CropSeasonRequest request) {
+        // Log chi tiết từng field của request
+//        logger.info("Request details:");
+//        logger.info("seasonName: {}", request.getSeasonName());
+//        logger.info("cropType: {}", request.getCropType());
+//        logger.info("area: {}", request.getArea());
+//        logger.info("plantingDate: {}", request.getPlantingDate());
+//        logger.info("expectedHarvestDate: {}", request.getExpectedHarvestDate());
+//        logger.info("status: {}", request.getStatus());
+//
+//        // Log trước khi mapping
+//        logger.info("Starting mapping to entity...");
         CropSeason season = cropSeasonMapper.toEntity(request);
+
+        // Log chi tiết entity sau khi mapping
+//        logger.info("Entity after mapping:");
+//        logger.info("seasonName: {}", season.getSeasonName());
+//        logger.info("cropType: {}", season.getCropType());
+//        logger.info("area: {}", season.getArea());
+//        logger.info("plantingDate: {}", season.getPlantingDate());
+//        logger.info("expectedHarvestDate: {}", season.getExpectedHarvestDate());
+//        logger.info("status: {}", season.getStatus());
+
         CropSeason savedSeason = cropSeasonRepository.save(season);
         return cropSeasonMapper.toResponse(savedSeason);
     }
 
     @Override
     public CropSeasonResponse updateSeason(Long id, CropSeasonRequest request) {
-        CropSeason existingSeason = findSeasonById(id);
-        cropSeasonMapper.toEntity(request); // Không tạo thực thể mới mà cập nhật các trường
-        CropSeason updatedSeason = cropSeasonRepository.save(existingSeason);
+        CropSeason existingSeason = cropSeasonRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy mùa vụ với id: " + id));
+
+        // Sử dụng phương thức update của mapper
+        CropSeason updatedSeason = cropSeasonMapper.updateEntityFromRequest(existingSeason, request);
+
+        // Lưu và trả về response
+        updatedSeason = cropSeasonRepository.save(updatedSeason);
         return cropSeasonMapper.toResponse(updatedSeason);
     }
 
@@ -72,9 +101,9 @@ public class CropSeasonServiceImpl implements CropSeasonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy mùa vụ với ID: " + id));
     }
 
-    private CropSeasonResponse convertToResponse(CropSeason season) {
-        CropSeasonResponse response = new CropSeasonResponse();
-        BeanUtils.copyProperties(season, response);
-        return response;
-    }
+//    private CropSeasonResponse convertToResponse(CropSeason season) {
+//        CropSeasonResponse response = new CropSeasonResponse();
+//        BeanUtils.copyProperties(season, response);
+//        return response;
+//    }
 }

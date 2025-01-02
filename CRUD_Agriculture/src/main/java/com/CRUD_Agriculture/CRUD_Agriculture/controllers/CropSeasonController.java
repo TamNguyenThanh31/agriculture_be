@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,12 +43,19 @@ public class CropSeasonController {
         return ResponseEntity.ok(season);
     }
 
-    @PostMapping
-    public ResponseEntity<CropSeasonResponse> createSeason(@Valid @RequestBody CropSeasonRequest request) {
-        logger.info("Received request: {}", request);
+    @PostMapping("/add-season")
+    public ResponseEntity<CropSeasonResponse> createSeason(@Validated @RequestBody CropSeasonRequest request) {
+        // Log raw request body
+        logger.info("Raw request received: {}", request);
+
+        // Log từng field
+        logger.info("Controller received request with:");
+//        logger.info("seasonName: {}", request.getSeasonName());
+//        logger.info("cropType: {}", request.getCropType());
         CropSeasonResponse createdSeason = cropSeasonService.createSeason(request);
         return new ResponseEntity<>(createdSeason, HttpStatus.CREATED);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<CropSeasonResponse> updateSeason(
