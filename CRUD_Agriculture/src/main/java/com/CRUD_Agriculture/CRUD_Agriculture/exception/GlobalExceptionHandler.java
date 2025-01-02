@@ -30,17 +30,17 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            log.error("Validation error - Field: {}, Message: {}", fieldName, errorMessage);
+//            log.error("Validation error - Field: {}, Message: {}", fieldName, errorMessage);
             errors.put(fieldName, errorMessage);
         });
-        log.info("Validation errors: {}", errors);
+        //log.info("Validation errors: {}", errors);
         return ResponseEntity.badRequest().body(errors);
     }
 
     // Xử lý các lỗi không mong muốn khác
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleAllExceptions(Exception ex) {
-        log.error("Unexpected error", ex);
+       // log.error("Unexpected error", ex);
         Map<String, String> response = new HashMap<>();
         response.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

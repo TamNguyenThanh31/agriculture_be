@@ -5,14 +5,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class CropSeasonRequest {
     @NotBlank(message = "Tên mùa vụ không được để trống")
@@ -35,4 +31,55 @@ public class CropSeasonRequest {
 
     @NotNull(message = "Trạng thái không được để trống")
     private SeasonStatus status;
+
+    public CropSeasonRequest() {}
+
+    public String getSeasonName() {
+        return seasonName;
+    }
+
+    public void setSeasonName(String seasonName) {
+        this.seasonName = seasonName;
+    }
+
+    public String getCropType() {
+        return cropType;
+    }
+
+    public void setCropType(String cropType) {
+        this.cropType = cropType;
+    }
+
+    public Double getArea() {
+        return area;
+    }
+
+    public void setArea(Double area) {
+        this.area = area;
+    }
+
+    public LocalDate getPlantingDate() {
+        return plantingDate;
+    }
+
+    public void setPlantingDate(LocalDate plantingDate) {
+        this.plantingDate = plantingDate;
+    }
+
+    public LocalDate getExpectedHarvestDate() {
+        return expectedHarvestDate;
+    }
+
+    public void setExpectedHarvestDate(LocalDate expectedHarvestDate) {
+        this.expectedHarvestDate = expectedHarvestDate;
+    }
+
+    public SeasonStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SeasonStatus status) {
+        this.status = status;
+    }
 }
+
