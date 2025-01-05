@@ -69,6 +69,7 @@ public class ForecastResponse {
     public static class Weather {
         private String main;
         private String description;
+        private String icon; // Thêm trường này để ánh xạ mã biểu tượng
 
         // Getters và Setters
         public String getMain() {
@@ -86,7 +87,13 @@ public class ForecastResponse {
         public void setDescription(String description) {
             this.description = description;
         }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
     }
 }
-
-

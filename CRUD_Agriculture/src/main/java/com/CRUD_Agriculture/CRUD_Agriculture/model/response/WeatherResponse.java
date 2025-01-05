@@ -1,7 +1,5 @@
 package com.CRUD_Agriculture.CRUD_Agriculture.model.response;
 
-import lombok.Data;
-
 public class WeatherResponse {
     private Main main;
     private Weather[] weather;
@@ -67,6 +65,7 @@ public class WeatherResponse {
     public static class Weather {
         private String main;
         private String description;
+        private String icon; // Thêm trường này
 
         public String getMain() {
             return main;
@@ -82,6 +81,14 @@ public class WeatherResponse {
 
         public void setDescription(String description) {
             this.description = description;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
         }
     }
 
