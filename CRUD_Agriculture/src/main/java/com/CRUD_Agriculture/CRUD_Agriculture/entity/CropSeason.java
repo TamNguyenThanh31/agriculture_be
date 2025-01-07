@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -112,4 +114,5 @@ public class CropSeason {
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }

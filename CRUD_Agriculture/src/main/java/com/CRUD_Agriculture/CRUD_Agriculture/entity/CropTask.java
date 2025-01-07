@@ -102,4 +102,5 @@ public class CropTask {
     public void setCost(Double cost) {
         this.cost = cost;
     }
+
 }
