@@ -2,6 +2,7 @@ package com.CRUD_Agriculture.CRUD_Agriculture.services.impl;
 
 import com.CRUD_Agriculture.CRUD_Agriculture.entity.CropSeason;
 import com.CRUD_Agriculture.CRUD_Agriculture.entity.CropTask;
+import com.CRUD_Agriculture.CRUD_Agriculture.entity.enums.TaskStatus;
 import com.CRUD_Agriculture.CRUD_Agriculture.exception.ResourceNotFoundException;
 import com.CRUD_Agriculture.CRUD_Agriculture.mapper.CropTaskMapper;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.request.CropTaskRequest;
@@ -12,7 +13,9 @@ import com.CRUD_Agriculture.CRUD_Agriculture.services.CropTaskService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CropTaskServiceImpl implements CropTaskService {
@@ -91,5 +94,33 @@ public class CropTaskServiceImpl implements CropTaskService {
         List<CropTask> tasks = cropTaskRepository.findByDueDateBetweenAndCropSeasonIdOrderByDueDateAsc(
                 startDate, endDate, cropSeasonId);
         return cropTaskMapper.toResponseList(tasks);
+    }
+
+    @Override
+    public Map<TaskStatus, Long> getTaskStatusSummary() {
+        List<Object[]> results = cropTaskRepository.countTasksByStatus();
+        Map<TaskStatus, Long> statusSummary = new HashMap<>();
+
+        for (Object[] result : results) {
+            TaskStatus status = (TaskStatus) result[0];
+            Long count = (Long) result[1];
+            statusSummary.put(status, count);
+        }
+
+        return statusSummary;
+    }
+
+    @Override
+    public Map<TaskStatus, Long> getTaskStatusSummaryForSeason(Long seasonId) {
+        List<Object[]> results = cropTaskRepository.countTasksByStatusForSeason(seasonId);
+        Map<TaskStatus, Long> statusSummary = new HashMap<>();
+
+        for (Object[] result : results) {
+            TaskStatus status = (TaskStatus) result[0];
+            Long count = (Long) result[1];
+            statusSummary.put(status, count);
+        }
+
+        return statusSummary;
     }
 }

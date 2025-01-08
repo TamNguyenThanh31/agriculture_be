@@ -4,6 +4,8 @@ import com.CRUD_Agriculture.CRUD_Agriculture.entity.CropTask;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.request.CropTaskRequest;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.response.CropTaskResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -27,4 +29,17 @@ public interface CropTaskRepository extends JpaRepository<CropTask, Long> {
             LocalDate endDate,
             Long cropSeasonId
     );
+    // Lay tong gia tien theo tung mua vu
+    @Query("SELECT SUM(t.cost) FROM CropTask t WHERE t.cropSeason.id = :seasonId")
+    Double sumCostBySeasonId(@Param("seasonId") Long seasonId);
+
+    //Lay trang thai theo tung mua vu
+    @Query("SELECT t.status, COUNT(t) FROM CropTask t WHERE t.cropSeason.id = :seasonId GROUP BY t.status")
+    List<Object[]> countTasksByStatusForSeason(@Param("seasonId") Long seasonId);
+
+
+    //Lay trang thai theo ca mua vu
+    @Query("SELECT t.status, COUNT(t) FROM CropTask t GROUP BY t.status")
+    List<Object[]> countTasksByStatus();
+
 }

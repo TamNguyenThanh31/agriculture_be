@@ -5,17 +5,20 @@ import com.CRUD_Agriculture.CRUD_Agriculture.mapper.CropSeasonMapper;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.request.CropSeasonRequest;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.response.CropSeasonResponse;
 import com.CRUD_Agriculture.CRUD_Agriculture.repository.CropSeasonRepository;
+import com.CRUD_Agriculture.CRUD_Agriculture.repository.CropTaskRepository;
 import com.CRUD_Agriculture.CRUD_Agriculture.services.CropSeasonService;
 import com.CRUD_Agriculture.CRUD_Agriculture.exception.ResourceNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -24,12 +27,14 @@ public class CropSeasonServiceImpl implements CropSeasonService {
 
     private final CropSeasonRepository cropSeasonRepository;
     private final CropSeasonMapper cropSeasonMapper;
+    private final CropTaskRepository cropTaskRepository;
     private static final Logger logger = LoggerFactory.getLogger(CropSeasonServiceImpl.class);
 
     // Constructor thủ công
-    public CropSeasonServiceImpl(CropSeasonRepository cropSeasonRepository, CropSeasonMapper cropSeasonMapper) {
+    public CropSeasonServiceImpl(CropSeasonRepository cropSeasonRepository, CropSeasonMapper cropSeasonMapper, CropTaskRepository cropTaskRepository) {
         this.cropSeasonRepository = cropSeasonRepository;
         this.cropSeasonMapper = cropSeasonMapper;
+        this.cropTaskRepository = cropTaskRepository;
     }
 
     @Override
@@ -101,9 +106,20 @@ public class CropSeasonServiceImpl implements CropSeasonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy mùa vụ với ID: " + id));
     }
 
-//    private CropSeasonResponse convertToResponse(CropSeason season) {
-//        CropSeasonResponse response = new CropSeasonResponse();
-//        BeanUtils.copyProperties(season, response);
-//        return response;
-//    }
+    @Override
+    public List<Map<String, Object>> getTotalCostsBySeasons() {
+        List<CropSeason> seasons = cropSeasonRepository.findAll();
+        List<Map<String, Object>> totalCosts = new ArrayList<>();
+
+        for (CropSeason season : seasons) {
+            Double totalCost = cropTaskRepository.sumCostBySeasonId(season.getId());
+            Map<String, Object> costData = new HashMap<>();
+            costData.put("seasonName", season.getSeasonName());
+            costData.put("totalCost", totalCost != null ? totalCost : 0.0); // Xử lý null
+            totalCosts.add(costData);
+        }
+
+        return totalCosts;
+    }
+
 }
