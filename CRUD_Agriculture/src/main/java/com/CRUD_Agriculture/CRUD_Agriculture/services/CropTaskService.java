@@ -1,11 +1,13 @@
 package com.CRUD_Agriculture.CRUD_Agriculture.services;
 
 import com.CRUD_Agriculture.CRUD_Agriculture.entity.CropTask;
+import com.CRUD_Agriculture.CRUD_Agriculture.entity.enums.TaskStatus;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.request.CropTaskRequest;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.response.CropTaskResponse;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface CropTaskService {
     // Thêm công việc
@@ -31,4 +33,10 @@ public interface CropTaskService {
 
     // Lấy công việc theo thời gian gần hạn
     List<CropTaskResponse> getTasksDueInRange(Long cropSeasonId, LocalDate startDate, LocalDate endDate);
+
+    //Lay danh sach theo trang thai cho ca mua vu
+    Map<TaskStatus, Long> getTaskStatusSummary();
+
+    //Lay danh sach theo tung mua vu theo trang thai
+    Map<TaskStatus, Long> getTaskStatusSummaryForSeason(Long seasonId);
 }

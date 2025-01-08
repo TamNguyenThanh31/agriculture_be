@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/seasons")
@@ -69,4 +70,11 @@ public class CropSeasonController {
         cropSeasonService.deleteSeason(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/total-costs")
+    public ResponseEntity<List<Map<String, Object>>> getTotalCostsBySeasons() {
+        List<Map<String, Object>> totalCosts = cropSeasonService.getTotalCostsBySeasons();
+        return ResponseEntity.ok(totalCosts);
+    }
+
 }

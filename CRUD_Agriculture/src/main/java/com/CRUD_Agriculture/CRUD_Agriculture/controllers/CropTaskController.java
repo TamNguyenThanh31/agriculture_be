@@ -1,5 +1,6 @@
 package com.CRUD_Agriculture.CRUD_Agriculture.controllers;
 
+import com.CRUD_Agriculture.CRUD_Agriculture.entity.enums.TaskStatus;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.request.CropTaskRequest;
 import com.CRUD_Agriculture.CRUD_Agriculture.model.response.CropTaskResponse;
 import com.CRUD_Agriculture.CRUD_Agriculture.services.CropTaskService;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -84,4 +86,19 @@ public class CropTaskController {
         List<CropTaskResponse> responses = cropTaskService.getTasksDueInRange(cropSeasonId, start, end);
         return ResponseEntity.ok(responses);
     }
+
+    //Lay danh sach task theo trang thai cua tat ca mua vu
+    @GetMapping("/status-summary")
+    public ResponseEntity<Map<TaskStatus, Long>> getTaskStatusSummary() {
+        Map<TaskStatus, Long> statusSummary = cropTaskService.getTaskStatusSummary();
+        return ResponseEntity.ok(statusSummary);
+    }
+
+    //Lay danh sach theo trang thai cua 1 mua vu
+    @GetMapping("/{cropSeasonId}/status-summary")
+    public ResponseEntity<Map<TaskStatus, Long>> getTaskStatusSummaryForSeason(@PathVariable Long cropSeasonId) {
+        Map<TaskStatus, Long> statusSummary = cropTaskService.getTaskStatusSummaryForSeason(cropSeasonId);
+        return ResponseEntity.ok(statusSummary);
+    }
+
 }
