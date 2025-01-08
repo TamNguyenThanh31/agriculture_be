@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/seasons")
 //@RequiredArgsConstructor
-@CrossOrigin("*")
 @Slf4j
 public class CropSeasonController {
 

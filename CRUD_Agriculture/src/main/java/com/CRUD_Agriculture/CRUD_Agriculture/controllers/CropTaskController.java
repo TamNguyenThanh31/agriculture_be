@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = "http://localhost:4200")
+
 public class CropTaskController {
 
     private final CropTaskService cropTaskService;
