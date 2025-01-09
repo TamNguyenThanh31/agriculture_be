@@ -97,9 +97,20 @@ public class GroqChatServiceImpl implements GroqChatService {
 
     // Trích xuất tên thành phố từ câu hỏi
     private String extractCityFromMessage(String userMessage) {
-        // Bạn có thể cải tiến logic để trích xuất thành phố từ câu hỏi
-        return "Hanoi"; // Mặc định là Hà Nội nếu không có tên thành phố trong câu hỏi
+        // Tìm kiếm một số từ khóa phổ biến để nhận diện thành phố
+        if (userMessage.toLowerCase().contains("hà nội")) return "Hanoi";
+        if (userMessage.toLowerCase().contains("tp hồ chí minh")) return "Ho Chi Minh";
+        if (userMessage.toLowerCase().contains("đà nẵng")) return "Da Nang";
+        if (userMessage.toLowerCase().contains("tokyo")) return "Tokyo";
+        if (userMessage.toLowerCase().contains("osaka")) return "Osaka";
+        if (userMessage.toLowerCase().contains("new york")) return "New York";
+        if (userMessage.toLowerCase().contains("paris")) return "Paris";
+        if (userMessage.toLowerCase().contains("london")) return "London";
+
+        // Nếu không tìm thấy tên thành phố, mặc định trả về một giá trị hoặc thông báo lỗi
+        return "Hanoi"; // Mặc định là Hà Nội nếu không xác định được thành phố
     }
+
 
     // Định dạng phản hồi thời tiết hiện tại
     private String formatCurrentWeatherResponse(WeatherResponse weather, String city) {
