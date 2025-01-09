@@ -16,7 +16,7 @@ import java.util.*;
 public class GroqChatServiceImpl implements GroqChatService {
 
     private final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
-    private final String API_KEY = "YOUR_API_KEY"; // Thay bằng API Key thực tế
+    private final String API_KEY = "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"; // Thay bằng API Key thực tế
 
     private final WeatherService weatherService;
 
