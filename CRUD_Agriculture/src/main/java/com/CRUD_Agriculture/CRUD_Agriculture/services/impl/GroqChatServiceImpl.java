@@ -137,18 +137,49 @@ public class GroqChatServiceImpl implements GroqChatService {
 
 
     // Định dạng phản hồi dự báo thời tiết 5 ngày
+//    private String formatForecastResponse(ForecastResponse forecast, String city) {
+//        StringBuilder response = new StringBuilder();
+//        response.append(String.format("Dự báo thời tiết 5 ngày tới tại %s:\n", city));
+//        for (ForecastResponse.Forecast day : forecast.getList()) {
+//            response.append(String.format(
+//                    "- Ngày %s: %s, nhiệt độ: %.1f°C, độ ẩm: %.1f%%.\n",
+//                    new SimpleDateFormat("dd/MM/yyyy").format(new Date(day.getDt() * 1000L)),
+//                    day.getWeather().get(0).getDescription(),
+//                    day.getMain().getTemp(),
+//                    day.getMain().getHumidity()
+//            ));
+//        }
+//        return response.toString();
+//    }
     private String formatForecastResponse(ForecastResponse forecast, String city) {
         StringBuilder response = new StringBuilder();
-        response.append(String.format("Dự báo thời tiết 5 ngày tới tại %s:\n", city));
+        response.append(String.format("🌤️ *Dự báo thời tiết 5 ngày tới tại %s:*\n\n", city)); // Tiêu đề với khoảng cách
+        response.append("━━━━━━━━━━━━━━━━━━\n"); // Dòng phân cách
+
+        int dayCount = 0;
         for (ForecastResponse.Forecast day : forecast.getList()) {
             response.append(String.format(
-                    "- Ngày %s: %s, nhiệt độ: %.1f°C, độ ẩm: %.1f%%.\n",
+                    "📅 *Ngày*: %s\n" +
+                            "⛅ *Thời tiết*: %s\n" +
+                            "🌡️ *Nhiệt độ*: %.1f°C\n" +
+                            "💧 *Độ ẩm*: %.1f%%\n\n",
                     new SimpleDateFormat("dd/MM/yyyy").format(new Date(day.getDt() * 1000L)),
                     day.getWeather().get(0).getDescription(),
                     day.getMain().getTemp(),
                     day.getMain().getHumidity()
             ));
+            response.append("━━━━━━━━━━━━━━━━━━\n");
+
+            dayCount++;
+
+            // Thêm ngắt đoạn khi dài
+            if (dayCount % 3 == 0) {
+                response.append("\n⏩ *Tiếp tục...*\n\n");
+            }
         }
+
         return response.toString();
     }
+
+
 }
